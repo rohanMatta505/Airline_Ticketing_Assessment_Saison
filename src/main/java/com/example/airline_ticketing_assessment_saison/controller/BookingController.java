@@ -15,12 +15,14 @@ public class BookingController {
     @PostMapping("/book")
     public Booking makeBooking(@RequestBody BookingRequest request) {
         //initiating booking by passing details like customerId, flightId in request body
+        System.out.println("Making a booking");
         return bookingService.makeBooking(request.getFlightId(), request.getCustomerId(), request.getSeatSelected(), request.getPaymentMode());
     }
 
     @DeleteMapping("/cancellation/{bookingId}")
     public void cancelBooking(@PathVariable Long bookingId) {
         //cancel Booking with bookingId
+        System.out.println("Cancelling booking");
         bookingService.cancelBooking(bookingId);
     }
 }

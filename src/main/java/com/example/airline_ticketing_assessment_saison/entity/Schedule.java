@@ -25,6 +25,10 @@ public class Schedule {
     private LocationCode origin;
 
     @ManyToOne
+    @JoinColumn(name = "flight_id")
+    private Flight flight;
+
+    @ManyToOne
     private LocationCode destination;
 
 }
