@@ -7,7 +7,11 @@ import com.example.airline_ticketing_assessment_saison.repository.FlightReposito
 import com.example.airline_ticketing_assessment_saison.repository.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class FlightService {
@@ -36,14 +40,15 @@ public class FlightService {
 
     public List<LocalDate> getAvailableDates(Schedule schedule) {
         List<LocalDate> availableDates = new ArrayList<>();
-        LocalDate startDate = schedule.getStartDate();
+        LocalDateTime startDate = schedule.getStartDate().atStartOfDay();
         LocalDate endDate = schedule.getEndDate();
 
         List<DayOfWeek> daysOfWeek = schedule.getDaysOfWeekAvailable().stream()
                 .map(this::mapDayStringToDayOfWeek)
                 .collect(Collectors.toList());
 
-        for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1)) {
+        for (LocalDate date = LocalDate.from(startDate); date.isBefore(endDate); date = date.plusDays(1)) {
+            // Checking if the current date's day of the week is in the list of available days
             if (daysOfWeek.contains(date.getDayOfWeek())) {
                 availableDates.add(date);
             }
@@ -59,7 +64,6 @@ public class FlightService {
             case "F": return DayOfWeek.FRIDAY;
             case "S": return DayOfWeek.SATURDAY;
             case "S": return DayOfWeek.SUNDAY;
-            default: throw new IllegalArgumentException("Invalid day");
         }
     }
 }

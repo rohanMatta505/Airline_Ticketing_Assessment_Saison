@@ -3,7 +3,11 @@ package com.example.airline_ticketing_assessment_saison.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
+
+import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Data

@@ -5,7 +5,4 @@ public class DayOfWeek {
     public enum Day {
         MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY;
     }
-    public DayOfTheWeek() {
-        this.days = EnumSet.noneOf(Day.class);
-    }
 }

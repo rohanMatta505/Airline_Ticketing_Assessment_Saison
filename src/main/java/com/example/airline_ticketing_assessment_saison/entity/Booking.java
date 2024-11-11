@@ -7,6 +7,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Id;
 import lombok.Data;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 @Entity
 @Data
 public class Booking {

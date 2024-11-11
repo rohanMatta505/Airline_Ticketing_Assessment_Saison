@@ -8,6 +8,9 @@ import com.example.airline_ticketing_assessment_saison.repository.CustomerReposi
 import com.example.airline_ticketing_assessment_saison.repository.FlightRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -24,14 +27,14 @@ public class BookingService {
     public Booking makeBooking(Long flightId, Long customerId, int seatSelected, String paymentMode) {
         Flight flight = flightRepository.findById(flightId);
         Customer customer = customerRepository.findById(customerId);
+        Booking booking = new Booking();
         if (seatManager.bookSeat(flightId, seatSelected)) {
-            Booking booking = new Booking();
             booking.setFlight(flight);
             booking.setCustomer(customer);
             booking.setSeatSelected(seatSelected);
             booking.setPaymentMode(paymentMode);
             booking.setPaymentStatus("Pending");
-            booking.setBookingDate(LocalDateTime.now());
+            booking.setBookingDate(LocalDate.from(LocalDateTime.now()));
             bookingRepository.save(booking);
         }
         else {
@@ -40,13 +43,8 @@ public class BookingService {
         return booking;
     }
     public void cancelBooking(Long bookingId) {
-        Booking bookingOPt = bookingRepository.findById(bookingId);
-
-        if (!bookingOpt.isPresent()) {
-            throw new IllegalArgumentException("Booking not found");
-        }
-
-        Booking booking = bookingOPt.get();
+        Booking bookingById = bookingRepository.findById(bookingId);
+        Booking booking = bookingById.get();
         Long flightId = booking.getFlight().getId();
         seatManager.releaseSeat(flightId);
 

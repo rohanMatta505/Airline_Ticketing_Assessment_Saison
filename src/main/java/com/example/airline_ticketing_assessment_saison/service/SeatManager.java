@@ -3,9 +3,10 @@ package com.example.airline_ticketing_assessment_saison.service;
 import com.example.airline_ticketing_assessment_saison.entity.Flight;
 import com.example.airline_ticketing_assessment_saison.repository.BookingRepository;
 import com.example.airline_ticketing_assessment_saison.repository.FlightRepository;
-import org.apache.el.stream.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class SeatManager {
@@ -15,7 +16,8 @@ public class SeatManager {
     private BookingRepository bookingRepository;
 
     public boolean isSeatAvailable(Long flightId, int seatNumber) {
-        Flight flight = flightRepository.findById(flightId);
+        //checking if the seatnumber is available in the provided flightId
+        Optional<Flight> flight = flightRepository.findById(flightId);
 
         if (flight.isPresent() && seatNumber > 0 && seatNumber <= flight.get().getCapacity()) {
             return flight.get().getAvailableSeats() > 0;
@@ -24,6 +26,7 @@ public class SeatManager {
     }
 
     public boolean bookSeat(Long flightId, int seatNumber) {
+        //booking 1 seat and reducing available seats by 1
         Flight flight = flightRepository.findById(flightId);
 
         if (flight.getAvailableSeats() > 0 && isSeatAvailable(flightId, seatNumber)) {
@@ -35,13 +38,11 @@ public class SeatManager {
     }
 
     public void releaseSeat(Long flightId) {
+        //releasing 1 seat and increasing seats available by 1
         Flight flight = flightRepository.findById(flightId);
-
         if (flight.isPresent()) {
             Flight currentFlight = flight.get();
-
             currentFlight.setAvailableSeats(currentFlight.getAvailableSeats() + 1);
-
             flightRepository.save(currentFlight);
         }
     }

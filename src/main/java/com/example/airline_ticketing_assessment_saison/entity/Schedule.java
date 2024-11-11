@@ -1,6 +1,10 @@
 package com.example.airline_ticketing_assessment_saison.entity;
 
 import jakarta.persistence.*;
+
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 import lombok.Data;
 

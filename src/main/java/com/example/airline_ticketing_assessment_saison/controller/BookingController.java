@@ -1,6 +1,6 @@
 package com.example.airline_ticketing_assessment_saison.controller;
 
-import com.example.airline_ticketing_assessment_saison.DTO.BookingRequest;
+import com.example.airline_ticketing_assessment_saison.entity.BookingRequest;
 import com.example.airline_ticketing_assessment_saison.entity.Booking;
 import com.example.airline_ticketing_assessment_saison.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
