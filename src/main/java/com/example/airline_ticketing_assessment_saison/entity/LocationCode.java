@@ -8,5 +8,4 @@ public class LocationCode {
     @Id
     private String code;
     private String city;
-    // getters and setters
 }

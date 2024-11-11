@@ -5,8 +5,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Id;
+import lombok.Data;
 
 @Entity
+@Data
 public class Booking {
     @Id
     @GeneratedValue
@@ -16,7 +18,7 @@ public class Booking {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    private Long seatSelected;
+    private int seatSelected;
     private LocalDate bookingDate;
     private String paymentStatus;
     private String paymentMode;

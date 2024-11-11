@@ -4,6 +4,7 @@ import com.example.airline_ticketing_assessment_saison.entity.Flight;
 import com.example.airline_ticketing_assessment_saison.service.FlightService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/flights")

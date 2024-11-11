@@ -1,11 +1,13 @@
 package com.example.airline_ticketing_assessment_saison.service;
 
+import com.example.airline_ticketing_assessment_saison.entity.DayOfWeek;
 import com.example.airline_ticketing_assessment_saison.entity.Flight;
 import com.example.airline_ticketing_assessment_saison.entity.Schedule;
 import com.example.airline_ticketing_assessment_saison.repository.FlightRepository;
 import com.example.airline_ticketing_assessment_saison.repository.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.*;
 
 @Service
 public class FlightService {
@@ -17,7 +19,7 @@ public class FlightService {
     public List<Flight> searchFlights(String originCode, String destinationCode, LocalDate date) {
         List<Flight> matchingFlights = new ArrayList<>();
 
-        List<Schedule> schedules = scheduleRepository.findByOrigin_CodeAndDestination_Code(originCode, destinationCode);
+        List<Schedule> schedules = scheduleRepository.findByOriginCodeAndDestinationCode(originCode, destinationCode);
 
         for (Schedule schedule : schedules) {
             List<LocalDate> availableDates = getAvailableDates(schedule);
@@ -26,6 +28,7 @@ public class FlightService {
                 matchingFlights.add(flight);
             }
         }
+        //returning list of flights which match the search result filter
         return matchingFlights;
     }
 

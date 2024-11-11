@@ -16,7 +16,7 @@ public class SeatManager {
 
     // Check if a seat is available
     public boolean isSeatAvailable(Long flightId, int seatNumber) {
-        Optional<Flight> flight = flightRepository.findById(flightId);
+        Flight flight = flightRepository.findById(flightId);
 
         // Check if the flight exists and the seat number is valid
         if (flight.isPresent() && seatNumber > 0 && seatNumber <= flight.get().getCapacity()) {
@@ -28,7 +28,7 @@ public class SeatManager {
 
     // Book a seat
     public boolean bookSeat(Long flightId, int seatNumber) {
-        Optional<Flight> flight = flightRepository.findById(flightId);
+        Flight flight = flightRepository.findById(flightId);
 
         if (flight.getAvailableSeats() > 0 && isSeatAvailable(flightId, seatNumber)) {
             flight.setAvailableSeats(flight.getAvailableSeats() - 1);
@@ -40,7 +40,7 @@ public class SeatManager {
 
     // Release a seat (for cancellations)
     public void releaseSeat(Long flightId) {
-        Optional<Flight> flight = flightRepository.findById(flightId);
+        Flight flight = flightRepository.findById(flightId);
 
         if (flight.isPresent()) {
             Flight currentFlight = flight.get();

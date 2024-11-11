@@ -1,8 +1,10 @@
 package com.example.airline_ticketing_assessment_saison.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
+@Data
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +22,5 @@ public class Schedule {
     @ManyToOne
     private LocationCode destination;
 
-    // Getters and Setters
 }
 

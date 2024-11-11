@@ -1,7 +1,10 @@
 package com.example.airline_ticketing_assessment_saison.service;
 
 import com.example.airline_ticketing_assessment_saison.entity.Booking;
+import com.example.airline_ticketing_assessment_saison.entity.Customer;
+import com.example.airline_ticketing_assessment_saison.entity.Flight;
 import com.example.airline_ticketing_assessment_saison.repository.BookingRepository;
+import com.example.airline_ticketing_assessment_saison.repository.CustomerRepository;
 import com.example.airline_ticketing_assessment_saison.repository.FlightRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,53 +15,34 @@ public class BookingService {
     private BookingRepository bookingRepository;
     @Autowired
     private FlightRepository flightRepository;
+    @Autowired
+    private CustomerRepository customerRepository;
 
     public Booking makeBooking(Long flightId, Long customerId, int seatSelected, String paymentMode) {
-        // Check seat availability, create booking if available, update available seats
-        Flight flight = flightRepository.findById(flightId)
-                .orElseThrow(() -> new ResourceNotFoundException("Flight not found"));
-
-        // Check if the seat is available
+        Flight flight = flightRepository.findById(flightId);
         if (seatSelected > flight.getAvailableSeats()) {
             throw new IllegalArgumentException("Seat selection exceeds available seats.");
         }
+        Customer customer = customerRepository.findById(customerId);
 
-        // Retrieve customer and check if it exists
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
-
-        // Create a booking
         Booking booking = new Booking();
         booking.setFlight(flight);
         booking.setCustomer(customer);
         booking.setSeatSelected(seatSelected);
         booking.setPaymentMode(paymentMode);
-        booking.setPaymentStatus("Pending");  // Assume 'Pending' status for new bookings
+        booking.setPaymentStatus("Pending");
         booking.setBookingDate(LocalDateTime.now());
 
-        // Save the booking
         bookingRepository.save(booking);
-
-        // Update available seats for the flight
         flight.setAvailableSeats(flight.getAvailableSeats() - seatSelected);
         flightRepository.save(flight);
-
         return booking;
     }
-
     public void cancelBooking(Long bookingId) {
-        // Retrieve booking, mark as canceled, update available seats
-        Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
-
-        // Retrieve the associated flight
+        Booking booking = bookingRepository.findById(bookingId);
         Flight flight = booking.getFlight();
-
-        // Mark the booking as canceled
         booking.setPaymentStatus("Canceled");
         bookingRepository.save(booking);
-
-        // Update the available seats for the flight
         flight.setAvailableSeats(flight.getAvailableSeats() + booking.getSeatSelected());
         flightRepository.save(flight);
     }

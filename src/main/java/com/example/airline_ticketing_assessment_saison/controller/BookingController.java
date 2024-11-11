@@ -1,5 +1,6 @@
 package com.example.airline_ticketing_assessment_saison.controller;
 
+import com.example.airline_ticketing_assessment_saison.DTO.BookingRequest;
 import com.example.airline_ticketing_assessment_saison.entity.Booking;
 import com.example.airline_ticketing_assessment_saison.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ public class BookingController {
 
     @PostMapping("/book")
     public Booking makeBooking(@RequestBody BookingRequest request) {
+        //initiating booking by passing details like customerId, flightId in request body
         return bookingService.makeBooking(request.getFlightId(), request.getCustomerId(), request.getSeatSelected(), request.getPaymentMode());
     }
 
