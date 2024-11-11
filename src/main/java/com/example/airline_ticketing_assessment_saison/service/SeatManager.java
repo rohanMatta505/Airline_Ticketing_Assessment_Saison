@@ -16,6 +16,14 @@ public class SeatManager {
 
     // Check if a seat is available
     public boolean isSeatAvailable(Long flightId, int seatNumber) {
+        Optional<Flight> flight = flightRepository.findById(flightId);
+
+        // Check if the flight exists and the seat number is valid
+        if (flight.isPresent() && seatNumber > 0 && seatNumber <= flight.get().getCapacity()) {
+            // Seat is available if it is within the capacity and within available seats
+            return flight.get().getAvailableSeats() > 0;
+        }
+        return false;
     }
 
     // Book a seat
@@ -32,5 +40,16 @@ public class SeatManager {
 
     // Release a seat (for cancellations)
     public void releaseSeat(Long flightId) {
+        Optional<Flight> flight = flightRepository.findById(flightId);
+
+        if (flight.isPresent()) {
+            Flight currentFlight = flight.get();
+
+            // Increase the available seat count (release the seat)
+            currentFlight.setAvailableSeats(currentFlight.getAvailableSeats() + 1);
+
+            // Save the updated flight data
+            flightRepository.save(currentFlight);
+        }
     }
 }
