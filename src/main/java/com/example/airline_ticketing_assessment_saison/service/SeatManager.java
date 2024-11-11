@@ -27,11 +27,11 @@ public class SeatManager {
 
     public boolean bookSeat(Long flightId, int seatNumber) {
         //booking 1 seat and reducing available seats by 1
-        Flight flight = flightRepository.findById(flightId);
+        Optional<Flight> flight = flightRepository.findById(flightId);
 
-        if (flight.getAvailableSeats() > 0 && isSeatAvailable(flightId, seatNumber)) {
-            flight.setAvailableSeats(flight.getAvailableSeats() - 1);
-            flightRepository.save(flight);
+        if (flight.get().getAvailableSeats() > 0 && isSeatAvailable(flightId, seatNumber)) {
+            flight.get().setAvailableSeats(flight.get().getAvailableSeats() - 1);
+            flightRepository.save(flight.get());
             return true;
         }
         return false;
@@ -39,7 +39,7 @@ public class SeatManager {
 
     public void releaseSeat(Long flightId) {
         //releasing 1 seat and increasing seats available by 1
-        Flight flight = flightRepository.findById(flightId);
+        Optional<Flight> flight = flightRepository.findById(flightId);
         if (flight.isPresent()) {
             Flight currentFlight = flight.get();
             currentFlight.setAvailableSeats(currentFlight.getAvailableSeats() + 1);

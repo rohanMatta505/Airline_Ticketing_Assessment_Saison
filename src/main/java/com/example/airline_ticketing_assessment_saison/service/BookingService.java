@@ -25,12 +25,12 @@ public class BookingService {
     private SeatManager seatManager;
 
     public Booking makeBooking(Long flightId, Long customerId, int seatSelected, String paymentMode) {
-        Flight flight = flightRepository.findById(flightId);
-        Customer customer = customerRepository.findById(customerId);
+        Optional<Flight> flight = flightRepository.findById(flightId);
+        Optional<Customer> customer = customerRepository.findById(customerId);
         Booking booking = new Booking();
         if (seatManager.bookSeat(flightId, seatSelected)) {
-            booking.setFlight(flight);
-            booking.setCustomer(customer);
+            booking.setFlight(flight.get());
+            booking.setCustomer(customer.get());
             booking.setSeatSelected(seatSelected);
             booking.setPaymentMode(paymentMode);
             booking.setPaymentStatus("Pending");
@@ -43,7 +43,7 @@ public class BookingService {
         return booking;
     }
     public void cancelBooking(Long bookingId) {
-        Booking bookingById = bookingRepository.findById(bookingId);
+        Optional<Booking> bookingById = bookingRepository.findById(bookingId);
         Booking booking = bookingById.get();
         Long flightId = booking.getFlight().getId();
         seatManager.releaseSeat(flightId);

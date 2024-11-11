@@ -43,9 +43,9 @@ public class FlightService {
         LocalDateTime startDate = schedule.getStartDate().atStartOfDay();
         LocalDate endDate = schedule.getEndDate();
 
-        List<DayOfWeek> daysOfWeek = schedule.getDaysOfWeekAvailable().stream()
+        List<DayOfWeek.Day> daysOfWeek = schedule.getDaysOfWeekAvailable().stream()
                 .map(this::mapDayStringToDayOfWeek)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()).reversed();
 
         for (LocalDate date = LocalDate.from(startDate); date.isBefore(endDate); date = date.plusDays(1)) {
             // Checking if the current date's day of the week is in the list of available days
@@ -55,15 +55,17 @@ public class FlightService {
         }
         return availableDates;
     }
-    private DayOfWeek mapDayStringToDayOfWeek(String day) {
+    private DayOfWeek.Day mapDayStringToDayOfWeek(String day) {
         switch (day) {
-            case "M": return DayOfWeek.MONDAY;
-            case "T": return DayOfWeek.TUESDAY;
-            case "W": return DayOfWeek.WEDNESDAY;
-            case "T": return DayOfWeek.THURSDAY;
-            case "F": return DayOfWeek.FRIDAY;
-            case "S": return DayOfWeek.SATURDAY;
-            case "S": return DayOfWeek.SUNDAY;
+
+            case "MO": return DayOfWeek.Day.MONDAY;
+            case "TU": return DayOfWeek.Day.TUESDAY;
+            case "WE": return DayOfWeek.Day.WEDNESDAY;
+            case "TH": return DayOfWeek.Day.THURSDAY;
+            case "FR": return DayOfWeek.Day.FRIDAY;
+            case "SA": return DayOfWeek.Day.SATURDAY;
+            case "SU": return DayOfWeek.Day.SUNDAY;
         }
+        return null;
     }
 }
