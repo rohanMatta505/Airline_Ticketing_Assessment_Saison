@@ -1,6 +1,7 @@
 package com.example.airline_ticketing_assessment_saison.entity;
 
 import jakarta.persistence.*;
+import java.util.*;
 import lombok.Data;
 
 @Entity
@@ -10,11 +11,11 @@ public class Schedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String flightNumber;
-    private List<String> daysOfWeekAvailable;  // E.g., ["M", "W", "F"] for Mondays, Wednesdays, Fridays
+    private List<String> daysOfWeekAvailable;
     private LocalTime departureTime;
     private Duration flightDuration;
-    private LocalDate startDate;  // To start calculating future available dates
-    private LocalDate endDate;    // 365 days from startDate
+    private LocalDate startDate; // To start calculating future available dates
+    private LocalDate endDate;// 365 days from startDate
 
     @ManyToOne
     private LocationCode origin;

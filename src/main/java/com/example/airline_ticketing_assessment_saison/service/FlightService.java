@@ -24,6 +24,7 @@ public class FlightService {
         for (Schedule schedule : schedules) {
             List<LocalDate> availableDates = getAvailableDates(schedule);
             if (availableDates.contains(date)) {
+                //flights which match the searched date
                 Flight flight = flightRepository.findByFlightNumber(schedule.getFlightNumber());
                 matchingFlights.add(flight);
             }

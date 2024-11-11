@@ -8,6 +8,7 @@ import com.example.airline_ticketing_assessment_saison.repository.CustomerReposi
 import com.example.airline_ticketing_assessment_saison.repository.FlightRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.*;
 
 @Service
 public class BookingService {
@@ -17,33 +18,38 @@ public class BookingService {
     private FlightRepository flightRepository;
     @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
+    private SeatManager seatManager;
 
     public Booking makeBooking(Long flightId, Long customerId, int seatSelected, String paymentMode) {
         Flight flight = flightRepository.findById(flightId);
-        if (seatSelected > flight.getAvailableSeats()) {
-            throw new IllegalArgumentException("Seat selection exceeds available seats.");
-        }
         Customer customer = customerRepository.findById(customerId);
-
-        Booking booking = new Booking();
-        booking.setFlight(flight);
-        booking.setCustomer(customer);
-        booking.setSeatSelected(seatSelected);
-        booking.setPaymentMode(paymentMode);
-        booking.setPaymentStatus("Pending");
-        booking.setBookingDate(LocalDateTime.now());
-
-        bookingRepository.save(booking);
-        flight.setAvailableSeats(flight.getAvailableSeats() - seatSelected);
-        flightRepository.save(flight);
+        if (seatManager.bookSeat(flightId, seatSelected)) {
+            Booking booking = new Booking();
+            booking.setFlight(flight);
+            booking.setCustomer(customer);
+            booking.setSeatSelected(seatSelected);
+            booking.setPaymentMode(paymentMode);
+            booking.setPaymentStatus("Pending");
+            booking.setBookingDate(LocalDateTime.now());
+            bookingRepository.save(booking);
+        }
+        else {
+            throw new IllegalArgumentException("Seat not available");
+        }
         return booking;
     }
     public void cancelBooking(Long bookingId) {
-        Booking booking = bookingRepository.findById(bookingId);
-        Flight flight = booking.getFlight();
-        booking.setPaymentStatus("Canceled");
-        bookingRepository.save(booking);
-        flight.setAvailableSeats(flight.getAvailableSeats() + booking.getSeatSelected());
-        flightRepository.save(flight);
+        Booking bookingOPt = bookingRepository.findById(bookingId);
+
+        if (!bookingOpt.isPresent()) {
+            throw new IllegalArgumentException("Booking not found");
+        }
+
+        Booking booking = bookingOPt.get();
+        Long flightId = booking.getFlight().getId();
+        seatManager.releaseSeat(flightId);
+
+        bookingRepository.delete(booking);
     }
 }

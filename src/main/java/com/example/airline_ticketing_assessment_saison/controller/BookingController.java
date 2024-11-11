@@ -18,8 +18,9 @@ public class BookingController {
         return bookingService.makeBooking(request.getFlightId(), request.getCustomerId(), request.getSeatSelected(), request.getPaymentMode());
     }
 
-    @DeleteMapping("/{bookingId}")
+    @DeleteMapping("cancellation/{bookingId}")
     public void cancelBooking(@PathVariable Long bookingId) {
+        //cancel Booking with bookingId
         bookingService.cancelBooking(bookingId);
     }
 }
