@@ -21,5 +21,4 @@ public class Flight {
 
     @OneToMany(mappedBy = "flight")
     private List<Schedule> schedules;
-    // getters and setters
 }

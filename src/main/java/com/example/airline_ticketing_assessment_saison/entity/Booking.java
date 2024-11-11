@@ -31,5 +31,4 @@ public class Booking {
     @ManyToOne
     @JoinColumn(name = "flight_id")
     private Flight flight;
-    // getters and setters
 }
